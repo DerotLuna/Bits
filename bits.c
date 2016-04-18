@@ -145,7 +145,7 @@ int thirdBits(void)
  *   Dificultad: 2
  */
 int fitsBits(int x, int n) {
-  return (x + (~(x - 1)));
+  return 2;
 }
 /*
  * sign - retorna 1 si es positivo, 0 si cero, y -1 si negativo
@@ -157,7 +157,7 @@ int fitsBits(int x, int n) {
  */
 int sign(int x) {
   
-  return 2;
+  return (x + (~(x - 1)));
 }
 /*
  * getByte - Extrae el byte n de la palabra x
