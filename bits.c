@@ -58,7 +58,7 @@
 
 EJEMPLOS DE FUNCIONES ACEPTADAS:
   /*
-   * pow2plus1 - retorna 2^x + 1, donde 0 <= x <= 31
+   * pow2plus1 - retorna 2^x + 1, donde 0 <= x = 31
    */
   int pow2plus1(int x)
   {
@@ -145,7 +145,7 @@ int thirdBits(void)
  *   Dificultad: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  return (x + (~(x - 1)));
 }
 /*
  * sign - retorna 1 si es positivo, 0 si cero, y -1 si negativo
@@ -156,6 +156,7 @@ int fitsBits(int x, int n) {
  *  Dificultad: 2
  */
 int sign(int x) {
+  
   return 2;
 }
 /*
