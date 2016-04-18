@@ -169,7 +169,7 @@ int sign(int x) {
  */
 int getByte(int x, int n)
 {
-  return 2;
+  return (x >> (8) & 0xFF);
 }
 /*
  * logicalShift - desplaza x a la derecha n bits, usando
