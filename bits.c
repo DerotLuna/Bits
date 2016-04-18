@@ -4,7 +4,7 @@
  * Proyecto 1
  *
  * Ruben Dario Luna Materan C.I.: 25.217437
- *  Brian Amaya C.I.:
+ *  Brian Amaya C.I.:  25.213.842
  *
  */
 
@@ -157,7 +157,11 @@ int fitsBits(int x, int n) {
  */
 int sign(int x) {
   
-  return (x + (~(x - 1)));
+ int sign, ifZero;
+    sign = x>>31;
+    ifZero = sign & x;
+           
+  return (ifZero & (sign ^ 1));
 }
 /*
  * getByte - Extrae el byte n de la palabra x
