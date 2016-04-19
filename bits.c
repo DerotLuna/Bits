@@ -158,10 +158,12 @@ int fitsBits(int x, int n) {
 int sign(int x) {
   
  int sign, ifZero;
+    int sign, ifNega, ifPosi, ifZero;
     sign = x>>31;
-    ifZero = sign & x;
+    ifNega = ~(sign & 1) ^ 1;
+    ifZero = sign ^ x;
            
-  return (ifZero & (sign ^ 1));
+  return ((ifNega & ifZero) ^ (~x ^ ~1 ^ 1)); //Llegué a esta mierda y me da, pero preguntame como llegue a esto... NI PUTA IDEA XDDD
 }
 /*
  * getByte - Extrae el byte n de la palabra x
