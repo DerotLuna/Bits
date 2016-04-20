@@ -145,7 +145,12 @@ int thirdBits(void)
  *   Dificultad: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+    int sign = x>>31;
+    x >>= (n-1);
+
+  return !(x ^ sign); // Buscar la manera de no usar "!", aunque sea una operación permitida, no quiero usarla
+}
+/*
 }
 /*
  * sign - retorna 1 si es positivo, 0 si cero, y -1 si negativo
