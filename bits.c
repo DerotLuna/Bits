@@ -133,7 +133,9 @@ int bitXor(int x, int y)
  */
 int thirdBits(void)
 {
-  return 2;
+  int x = 0x49249249;
+  
+  return x; //No debería ser así, pero es lo mejor que se me ocurre, prefiero seguir con otras antes de quedarme pegado con esta
 }
 /*
  * fitsBits - retorna 1 si se puede representar x como un entero
@@ -193,7 +195,9 @@ int getByte(int x, int n)
  */
 int logicalShift(int x, int n)
 {
-  return 2;
+    x >>= n;
+    
+  return x;
 }
 /*
  * addOK - Determina si se puede calcular x+y sin overflow
@@ -267,6 +271,7 @@ int main(int argc, char *argv[])
 {
   printf("%i\n", bitAnd(6, 5));
   printf("%i\n", bitXor(6, 5));
+  printf("%d\n", thirdBits());
 
   return 0;
 }
