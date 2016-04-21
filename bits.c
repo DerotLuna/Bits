@@ -133,9 +133,20 @@ int bitXor(int x, int y)
  */
 int thirdBits(void)
 {
-  int x = 0x49249249;
-  
-  return x; //No debería ser así, pero es lo mejor que se me ocurre, prefiero seguir con otras antes de quedarme pegado con esta
+  int x = 1;
+
+   x =  x | 8;
+   x =  x | 64;
+   x =  x | 512;
+   x =  x | 4096;
+   x =  x | 32768;
+   x =  x | 262144;    //Sumo las potencias de dos, intercalando cada tres para obtener un 1 cada tercer bit.
+   x =  x | 2097152;
+   x =  x | 16777216;
+   x =  x | 134217728;
+   x =  x | 1073741824;
+
+   return (x);
 }
 /*
  * fitsBits - retorna 1 si se puede representar x como un entero
@@ -164,13 +175,12 @@ int fitsBits(int x, int n) {
  */
 int sign(int x) {
   
- int sign, ifZero;
-    int sign, ifNega, ifPosi, ifZero;
+ int sign, ifNega, ifZero;
     sign = x>>31;
     ifNega = ~(sign & 1) ^ 1;
     ifZero = sign ^ x;
-           
-  return ((ifNega & ifZero) ^ (~x ^ ~1 ^ 1)); //Llegué a esta mierda y me da, pero preguntame como llegue a esto... NI PUTA IDEA XDDD
+
+  return ((~(ifNega & ifZero) ^ (~x))); //Retorna -1 si es negativo, retorna 0 si es 0 y retorna 1 si es positivo e IMPAR, si es par, retorna 0
 }
 /*
  * getByte - Extrae el byte n de la palabra x
@@ -195,9 +205,13 @@ int getByte(int x, int n)
  */
 int logicalShift(int x, int n)
 {
-    x >>= n;
-    
-  return x;
+    int sign = x << 31; // Se pedirá el signo para ver cuál es el bit más significativo
+
+    int aux = 1 << (33 + ~n);// Se agrega un aux para que cuando x sea negativa, se deshaga de los "1" que generará al mover a la derecha
+                              // por ser "1" el bit más significativo
+                           
+  return (~sign & (x >> n)) | (sign & ((x >> n) + aux)); //La premisa izquierda de la "|" me hará el logicalShifting normal si es positivo
+                                                         //Mientras que la premisa derecha se deshará de los "1's" si el num es negativo
 }
 /*
  * addOK - Determina si se puede calcular x+y sin overflow
