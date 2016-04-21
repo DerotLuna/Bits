@@ -233,7 +233,8 @@ int addOK(int x, int y) {
  */
 int bang(int x)
 {
-  return 2;
+  int ifZero = x; // no lo he probado, pero creo que funciona
+  return (x & 1 | x & ~x);
 }
 /*
  * divpwr2 - Calcula x/(2^n), para 0 <= n <= 30
