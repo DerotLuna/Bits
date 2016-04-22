@@ -80,7 +80,7 @@ EJEMPLOS DE FUNCIONES ACEPTADAS:
   }
 
 
-NOTAS: Cada funci�n tiene una cantidad maxima de operandos que pueden utilizar para su implementaci�n de la funcion.  Note que el operador de asignacion "=" no cuenta.
+NOTAS: Cada funciï¿½n tiene una cantidad maxima de operandos que pueden utilizar para su implementaciï¿½n de la funcion.  Note que el operador de asignacion "=" no cuenta.
 
 REGLAS PARA LOS ROMPECABEZAS DE PUNTO FLOTANTE
 Para los problemas que requiera que implemente operaciones de punto flotantes
@@ -161,7 +161,7 @@ int fitsBits(int x, int n) {
     int sign = x>>31;
     x >>= (n-1);
 
-  return !(x ^ sign); // Buscar la manera de no usar "!", aunque sea una operación permitida, no quiero usarla
+  return !(x ^ sign); // Buscar la manera de no usar "!", aunque sea una operaciÃ³n permitida, no quiero usarla
 }
 /*
 }
@@ -174,13 +174,14 @@ int fitsBits(int x, int n) {
  *  Dificultad: 2
  */
 int sign(int x) {
-  
- int sign, ifNega, ifZero;
-    sign = x>>31;
-    ifNega = ~(sign & 1) ^ 1;
-    ifZero = sign ^ x;
-
-  return ((~(ifNega & ifZero) ^ (~x))); //Retorna -1 si es negativo, retorna 0 si es 0 y retorna 1 si es positivo e IMPAR, si es par, retorna 0
+  return ((!!x)) | (x >> 31));
+  /* Si el signo de x es negativo, significa que x a nivel de bits tiene el bit más significativo en 1
+     por lo que si se hace el shifting a la derecha, generará 0xFFFFFFFF, que es -1, y al hacer el OR con !!x, dará -1
+     
+     Si el signo es positivo y distinto de 0, la doble negacion de x dará 1, y 1 OR cualquier cosa = 1
+     
+     Si el numero es 0, la doble negacion de 0 es 0, y el shifting de 0 a la derecha, generará 0 y 0|0 = 0
+     */
 }
 /*
  * getByte - Extrae el byte n de la palabra x
@@ -192,7 +193,7 @@ int sign(int x) {
  */
 int getByte(int x, int n)
 {
-  n <<= 3; //dezplazo por 3 por la difinicion de la numeracion de bytes
+  n <<= 3; //dezplazo por 3 por la definicion de la numeracion de bytes
   return (x >> (n) & 0xFF); //desplazo entre el resultado de n y lo que me quede lo "separo" con el 256(0xFF)
 }
 /*
@@ -208,15 +209,15 @@ int logicalShift(int x, int n)
 {
       int muestra = 1; //
 
-     muestra = muestra << 31; // muestra estaría de la forma 10000...
+     muestra = muestra << 31; // muestra estarÃ­a de la forma 10000...
 
-     muestra = muestra >> (n+(~1 ^ 1)); //Como el digito más significativo de muestra es 1, entonces se repetirá por el desplazamiento a la derecha
+     muestra = muestra >> (n+(~1 ^ 1)); //Como el digito mÃ¡s significativo de muestra es 1, entonces se repetirÃ¡ por el desplazamiento a la derecha
                                         //Dejando el digito menos significativo en 0
                                         
      x = x >> n; //Se desplaza normalmente x
 
-     return (x & ~muestra); //Esto aplicará bit a bit un "and", que por el negado de "muestra" y la estructura que tiene,
-                           //podrá deshacerse de los "1's" si x fuese negativa
+     return (x & ~muestra); //Esto aplicarÃ¡ bit a bit un "and", que por el negado de "muestra" y la estructura que tiene,
+                           //podrÃ¡ deshacerse de los "1's" si x fuese negativa
 }
 /*
  * addOK - Determina si se puede calcular x+y sin overflow
@@ -228,15 +229,13 @@ int logicalShift(int x, int n)
  */
 int addOK(int x, int y) {
   int capsule = 0;
-  capsule = (x+y) << 31; //guardo el signo de la suma de x + y
-  x =<< 31;
-  y =<< 31;
+  capsule = (x+y) >> 31; //guardo el signo de la suma de x + y
+  x = x >> 31;
+  y = y >> 31;
   //Obtuve el signo de x pero tambien el de y.
-  return ((x ^ y) ^ capsule);
+  return !!((x ^ y) | capsule);
   /*Lo que retornamos sera con respecto al siguiente concepto:
-    si al sumar valores con igual signo, cambia su signo es que ocurrio un overflow; y con
-    el & podemos hacer esa comparacion.
-    */
+    si al sumar valores con igual signo, cambia su signo es que ocurrio un overflow. */
 }
 /*
  * bang - Calcula !x sin usar !
@@ -254,12 +253,12 @@ int bang(int x)
 
     int shift = (x | comp2) >> 31;
 
-    //Despues de operar x con su complemento a 2, dependiendo del bit de signo, se realizará un shifting a la derecha de 31 bits
-    //que si el bit de signo es 0, todo el shifting generará 0.
-    //Mientras que  si el bit de signo generado es 1, el shifting generará 0xFFFFFFFF que es equivalente al complemento a 2 de 0x0000001
+    //Despues de operar x con su complemento a 2, dependiendo del bit de signo, se realizarÃ¡ un shifting a la derecha de 31 bits
+    //que si el bit de signo es 0, todo el shifting generarÃ¡ 0.
+    //Mientras que  si el bit de signo generado es 1, el shifting generarÃ¡ 0xFFFFFFFF que es equivalente al complemento a 2 de 0x0000001
     //y es -1 en decimal.
 
-  return (shift+1); //Solo faltaría sumarle 1 a lo obtenido para obtener 1 o 0.
+  return (shift+1); //Solo faltarÃ­a sumarle 1 a lo obtenido para obtener 1 o 0.
 }
 /*
  * divpwr2 - Calcula x/(2^n), para 0 <= n <= 30
@@ -271,14 +270,15 @@ int bang(int x)
  */
 int divpwr2(int x, int n)
 {
-    return 2;
+    x = (x >> n ); //al correr x a la derecha, n bits, es equivalente a dividir entre las potencias de 2
+    return x;
 }
 /*
  * floatNeg - Retorna el equivalente a nivel de bits de la
  *  expresion -f .
  *   Ambos, el parametro y el resultado deben pasar como enteros
  *   sin signo, pero deben interpretarse como la representacion a
- *  nivel de bits de un valor punto flotante de precisi�n simple.
+ *  nivel de bits de un valor punto flotante de precisiï¿½n simple.
  *   Cuando el parametro es NaN, retorna el parametro.
  *   Operaciones permitidas: Cualquier operacion de int y unsigned
  *   incluyendo
@@ -288,12 +288,23 @@ int divpwr2(int x, int n)
  */
 unsigned floatNeg(unsigned uf)
 {
- return 2;
+    int NaN = 0xFF << 23; // Para que queden los 8 bits de signo en ocho 1's
+    int aux_Mantisa = 0x7FFFFF;// 23 bits de solo 1´s y el resto en 0
+    int mantisa = uf & aux_Mantisa; //multiplicamos bit a bit para solo obtener 23 bits del numero original
+    if (((uf & NaN) == NaN) && (mantisa != 0)) return uf; 
+    /* Si los 8 bits de exponente que se obtiene al multplicar uf con NaN son 1's, entonces
+       se retorna el parametro porque no seria numero y nos aseguramos que la mantisa no sea 0*/
+    return uf ^ (1 << 31); 
+    /*
+      Se le asigna el signo corriendo 0x01 31 bits a la izquierda para obtener 0x80000000 que sería 
+      para luego hacer Xor que le asignará el bit de signo.
+    */
+ 
 }
 /*
  * floatTwice - Retorna el equivalente a nivel de bits de la
  * expresion 2*f del parametro f.
- *   Tanto el par�metro como el resultado pasan como enteros sin
+ *   Tanto el parï¿½metro como el resultado pasan como enteros sin
  *  signo, pero se interpretan como representaciones de valores
  *  punto flotante de precision simple.
  *  Cuando el parametro es NaN, retorna NaN.
@@ -309,9 +320,14 @@ unsigned floatTwice(unsigned f)
 
 int main(int argc, char *argv[])
 {
-  printf("%i\n", bitAnd(6, 5));
+  /*rintf("%i\n", bitAnd(6, 5));
   printf("%i\n", bitXor(6, 5));
   printf("%d\n", thirdBits());
-
+  */
+  printf("%i\n", sign(0));
+  printf("%i\n", !!-1);
+  //addOK(0x80000000,0x80000000) = 0
+  //addOK(0x80000000,0x70000000) = 1
+  system("PAUSE");
   return 0;
 }
