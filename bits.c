@@ -206,13 +206,17 @@ int getByte(int x, int n)
  */
 int logicalShift(int x, int n)
 {
-    int sign = x << 31; // Se pedirá el signo para ver cuál es el bit más significativo
+      int muestra = 1; //
 
-    int aux = 1 << (33 + ~n);// Se agrega un aux para que cuando x sea negativa, se deshaga de los "1" que generará al mover a la derecha
-                              // por ser "1" el bit más significativo
-                           
-  return (~sign & (x >> n)) | (sign & ((x >> n) + aux)); //La premisa izquierda de la "|" me hará el logicalShifting normal si es positivo
-                                                         //Mientras que la premisa derecha se deshará de los "1's" si el num es negativo
+     muestra = muestra << 31; // muestra estaría de la forma 10000...
+
+     muestra = muestra >> (n+(~1 ^ 1)); //Como el digito más significativo de muestra es 1, entonces se repetirá por el desplazamiento a la derecha
+                                        //Dejando el digito menos significativo en 0
+                                        
+     x = x >> n; //Se desplaza normalmente x
+
+     return (x & ~muestra); //Esto aplicará bit a bit un "and", que por el negado de "muestra" y la estructura que tiene,
+                           //podrá deshacerse de los "1's" si x fuese negativa
 }
 /*
  * addOK - Determina si se puede calcular x+y sin overflow
