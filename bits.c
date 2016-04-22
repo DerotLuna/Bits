@@ -315,7 +315,13 @@ unsigned floatNeg(unsigned uf)
  */
 unsigned floatTwice(unsigned f)
 {
-  return 2;
+    int NaN = 0xFF << 23; // Para que queden los 8 bits de signo en ocho 1's
+    int aux_Mantisa = 0x7FFFFF;// 23 bits de solo 1´s y el resto en 0
+    int mantisa = f & aux_Mantisa; //multiplicamos bit a bit para solo obtener 23 bits del numero original
+    if (((f & NaN) == NaN) && (mantisa != 0)) return f; 
+    /* Si los 8 bits de exponente que se obtiene al multplicar uf con NaN son 1's, entonces
+       se retorna el parametro porque no seria numero y nos aseguramos que la mantisa no sea 0*/
+    return f << 1;
 }
 
 int main(int argc, char *argv[])
@@ -325,9 +331,10 @@ int main(int argc, char *argv[])
   printf("%d\n", thirdBits());
   */
   printf("%i\n", sign(0));
-  printf("%i\n", !!-1);
+  printf("%i\n", floatTwice(-23));
   //addOK(0x80000000,0x80000000) = 0
   //addOK(0x80000000,0x70000000) = 1
   system("PAUSE");
   return 0;
 }
+
