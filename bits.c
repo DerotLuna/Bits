@@ -192,7 +192,8 @@ int sign(int x) {
  */
 int getByte(int x, int n)
 {
-  return (x >> (8) & 0xFF);
+  n <<= 3; //dezplazo por 3 por la difinicion de la numeracion de bytes
+  return (x >> (n) & 0xFF); //desplazo entre el resultado de n y lo que me quede lo "separo" con el 256(0xFF)
 }
 /*
  * logicalShift - desplaza x a la derecha n bits, usando
@@ -222,7 +223,16 @@ int logicalShift(int x, int n)
  *   Dificultad: 3
  */
 int addOK(int x, int y) {
-  return 2;
+  int capsule = 0;
+  capsule = (x+y) << 31; //guardo el signo de la suma de x + y
+  x =<< 31;
+  y =<< 31;
+  //Obtuve el signo de x pero tambien el de y.
+  return ((x ^ y) ^ capsule);
+  /*Lo que retornamos sera con respecto al siguiente concepto:
+    si al sumar valores con igual signo, cambia su signo es que ocurrio un overflow; y con
+    el & podemos hacer esa comparacion.
+    */
 }
 /*
  * bang - Calcula !x sin usar !
