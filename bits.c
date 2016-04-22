@@ -233,8 +233,19 @@ int addOK(int x, int y) {
  */
 int bang(int x)
 {
-  int ifZero = x; // no lo he probado, pero creo que funciona
-  return (x & 1 | x & ~x);
+  int comp2 = ~x + 1; //Calculamos el complemento a 2
+
+    //El bit de signo al operar 0|~0 es 0
+    //El bit de signo al operar x|~x, siendo x un numero distinto de 0, es 1
+
+    int shift = (x | comp2) >> 31;
+
+    //Despues de operar x con su complemento a 2, dependiendo del bit de signo, se realizará un shifting a la derecha de 31 bits
+    //que si el bit de signo es 0, todo el shifting generará 0.
+    //Mientras que  si el bit de signo generado es 1, el shifting generará 0xFFFFFFFF que es equivalente al complemento a 2 de 0x0000001
+    //y es -1 en decimal.
+
+  return (shift+1); //Solo faltaría sumarle 1 a lo obtenido para obtener 1 o 0.
 }
 /*
  * divpwr2 - Calcula x/(2^n), para 0 <= n <= 30
