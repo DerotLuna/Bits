@@ -316,9 +316,17 @@ unsigned floatNeg(unsigned uf)
 unsigned floatTwice(unsigned f)
 {
     int NaN = 0xFF << 23; // Para que queden los 8 bits de signo en ocho 1's
+    int NegF = ~f + 1;
     int aux_Mantisa = 0x7FFFFF;// 23 bits de solo 1´s y el resto en 0
     int mantisa = f & aux_Mantisa; //multiplicamos bit a bit para solo obtener 23 bits del numero original
-    if (f >> 31 &&  1) return ~((~f + 1) << 1) + 1;
+
+    if (f >> 31 &&  1){
+      int comp2 = ~((~f + 1) << 1) + 1;
+        if (!(comp2 >> 31) && 1)
+            return f;
+        else
+        return comp2;
+    }
     else if (((f & NaN) == NaN) && (mantisa != 0)) return f;
     /* Si los 8 bits de exponente que se obtiene al multplicar f con NaN son 1's, entonces
        se retorna el parametro porque no seria numero y nos aseguramos que la mantisa no sea 0*/
