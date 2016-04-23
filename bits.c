@@ -158,10 +158,12 @@ int thirdBits(void)
  *   Dificultad: 2
  */
 int fitsBits(int x, int n) {
-    int sign = x>>31;
-    x >>= (n-1);
+    int aux = x>>31; // aux = 0 o 0xFFFFFFFF
+    x >>= (n + (~1 + 1)); // El parametro x se moverá n-1 veces, para obtener el bit "más significativo" según el límite de bits
 
-  return !(x ^ sign); // Buscar la manera de no usar "!", aunque sea una operaciÃ³n permitida, no quiero usarla
+  return !(x ^ aux);
+  /* Ahora, corriendo "x" n-1 veces, dará 0 o 1 que sumado con 0xFFFFFFFF o 0, dará 0 o 1 al negarlo, siendo 1 si cabe en n bits
+     y 0 si no cabe*/
 }
 /*
 }
@@ -209,7 +211,7 @@ int logicalShift(int x, int n)
 {
       int muestra = 1; //
 
-     muestra = muestra << 31; // muestra estarÃ­a de la forma 10000...
+     muestra = muestra << 31; // muestra estaria de la forma 10000...
 
      muestra = muestra >> (n+(~1 ^ 1)); //Como el digito mÃ¡s significativo de muestra es 1, entonces se repetirÃ¡ por el desplazamiento a la derecha
                                         //Dejando el digito menos significativo en 0
@@ -316,34 +318,22 @@ unsigned floatNeg(unsigned uf)
 unsigned floatTwice(unsigned f)
 {
     int NaN = 0xFF << 23; // Para que queden los 8 bits de signo en ocho 1's
-    int NegF = ~f + 1;
     int aux_Mantisa = 0x7FFFFF;// 23 bits de solo 1´s y el resto en 0
     int mantisa = f & aux_Mantisa; //multiplicamos bit a bit para solo obtener 23 bits del numero original
-
+    
+    /* Primero haremos la confirmación de si el número es negativo porque además de ser algo más complejo, la condición normal del NaN
+       no tomaría un NaN si el número en el parametro es negativo*/
+       
     if (f >> 31 &&  1){
-      int comp2 = ~((~f + 1) << 1) + 1;
-        if (!(comp2 >> 31) && 1)
-            return f;
+      int comp2 = ~((~f + 1) << 1) + 1; //Se saca el signo (en complemento a 2) de la operación (2f) para ver  si se genera overflow
+        if (!(comp2 >> 31) && 1) // Si se genera overflow con un numero negativo, el bit de signo será 0, por lo que se niega y se compara con 1
+            return f; //Se retornará el parametro si se generó un overflow
         else
-        return comp2; //
+        return comp2; //Sino, se retornará el valor multiplicado por 2
     }
     else if (((f & NaN) == NaN) && (mantisa != 0)) return f;
     /* Si los 8 bits de exponente que se obtiene al multplicar f con NaN son 1's, entonces
        se retorna el parametro porque no seria numero y nos aseguramos que la mantisa no sea 0*/
-    return f << 1;
-}
-
-int main(int argc, char *argv[])
-{
-  /*rintf("%i\n", bitAnd(6, 5));
-  printf("%i\n", bitXor(6, 5));
-  printf("%d\n", thirdBits());
-  */
-  printf("%i\n", sign(0));
-  printf("%i\n", floatTwice(-23));
-  //addOK(0x80000000,0x80000000) = 0
-  //addOK(0x80000000,0x70000000) = 1
-  system("PAUSE");
-  return 0;
+    return f << 1; // Si el numero es positivo y es un numero, retornará f<<1, lo cual es equivalente a 2f
 }
 
