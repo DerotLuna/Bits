@@ -325,7 +325,7 @@ unsigned floatTwice(unsigned f)
         if (!(comp2 >> 31) && 1)
             return f;
         else
-        return comp2;
+        return comp2; //
     }
     else if (((f & NaN) == NaN) && (mantisa != 0)) return f;
     /* Si los 8 bits de exponente que se obtiene al multplicar f con NaN son 1's, entonces
